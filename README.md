@@ -14,9 +14,8 @@ This project is made using JavaScript. It requires express, cors, node, and dote
 <!-- Provide a detailed description of the application design. What technologies (languages, libraries, etc) you're using, and any other relevant design information. -->
 
 ## Change Log
-<!-- Use this area to document the iterative changes made to your application as each feature is successfully implemented. Use time stamps. Here's an example:
-
-01-01-2001 4:59pm - Application now has a fully-functional express server, with a GET route for the location resource. -->
+.0.1 Set up initial server info including dummy weather data.
+.0.2 Finished route and response for dummy data.
 
 ## Credit and Collaborations
 Worked with Minhang Xie to whiteboard the process.

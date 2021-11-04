@@ -8,12 +8,12 @@ app.use(cors());
 
 const PORT = process.env.PORT;
 
-const weatherData = require('./data/weather.json');
+const weather = require('./data/weather.json');
 const { request } = require('express');
 
 
-app.get('/temp', (request, response) => { response.send('This is a placeholder string') });
 app.get('/weather', handleGetWeather);
+app.get('/*', (req, res) => res.status(404).send('Pathway not found'));
 
 weatherDescription = () => {
     let desc = `Low of ${element.low_temp}, high of ${element.high_temp} with ${element.weather.description}`
@@ -21,9 +21,35 @@ weatherDescription = () => {
 }
 
 const handleGetWeather = (req, res) => {
-    const data = weatherData.find(element => element.city_name == request.query.city_name && element.lon == request.query.lon && element.lat == request.query.lat);
-    if (data)
-    res.status(200).send(weatherData)
+    const cityName = req.query.city;
+    const lat = req.query.lat;
+    const lon = req.query.lon;
+
+    try {
+        const cityToSend = weather.find( city => {
+            if((city.lat === lat && city.lon === lon) || city.city_name === cityName) {
+                return true
+            }
+            return false;
+        });
+        if (cityToSend) {
+            const forecastData = cityToSend.data.map(city => new Forecast(city));
+            res.status(200).send(forecastData)
+        } else {
+            res.status(404).send('City not found.')
+        }
+    } catch (e) {
+        res.status(500).send('Server error.')
+    }
+}
+
+class Forecast {
+    constructor(obj) {
+        this.min_temp = obj.min_temp;
+        this.max_temp = obj.max_temp;
+        this.description = obj.weather.description;
+        this.date = obj.datetime;
+    }
 }
 
 app.listen(PORT, () => console.log('I am a server that is listening'));
